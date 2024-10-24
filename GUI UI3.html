@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Dashboard</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+
+        /* Claim Item Styles */
+        .claim-item {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .claim-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .claim-actions button {
+            margin-left: 0.5rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Coordinator Dashboard</h1>
+        <h2>Pending Claims</h2>
+        <div id="pendingClaimsList"></div>
+    </div>
+
+    <script>
+        const claims = []; // This should be dynamically populated from the lecturer's claims
+
+        function approveClaim(claimId) {
+            // Logic to approve the claim
+            console.log('Claim approved:', claimId);
+            alert(`Claim ${claimId} approved!`);
+            // Refresh the claims list after approval
+            displayPendingClaims();
+        }
+
+        function rejectClaim(claimId) {
+            // Logic to reject the claim
+            console.log('Claim rejected:', claimId);
+            alert(`Claim ${claimId} rejected!`);
+            // Refresh the claims list after rejection
+            displayPendingClaims();
+        }
+
+        function displayPendingClaims() {
+            const claimsList = document.getElementById('pendingClaimsList');
+            claimsList.innerHTML = ''; // Clear previous claims
+
+            claims.forEach(claim => {
+                const claimItem = document.createElement('div');
+                claimItem.classList.add('claim-item');
+
+                const claimDetails = document.createElement('div');
+                claimDetails.classList.add('claim-details');
+                claimDetails.innerHTML = `
+                    <div>
+                        <h4>Lecturer: ${claim.lecturer}</h4>
+                        <p>Hours Worked: ${claim.hoursWorked}</p>
+                        <p>Hourly Rate: $${claim.hourlyRate}</p>
+                        <p>Additional Notes: ${claim.additionalNotes}</p>
+                        <p>Document: ${claim.document}</p>
+                    </div>
+                    <div class="claim-actions">
+                        <button onclick="approveClaim(${claim.id})">Approve</button>
+                        <button onclick="rejectClaim(${claim.id})">Reject</button>
+                    </div>
+                `;
+
+                claimItem.appendChild(claimDetails);
+                claimsList.appendChild(claimItem);
+            });
+        }
+
+        // Initialize claims with sample data for demonstration
+        // In a real application, this would come from the lecturer's submissions
+        claims.push(
+            { id: 1, lecturer: 'John Doe', hoursWorked: 80, hourlyRate: 50, additionalNotes: 'First claim', document: 'claim1.pdf' },
+            { id: 2, lecturer: 'Jane Smith', hoursWorked: 60, hourlyRate: 45, additionalNotes: 'Second claim', document: 'claim2.docx' }
+        );
+
+        // Display the claims on page load
+        displayPendingClaims();
+    </script>
+</body>
+</html>

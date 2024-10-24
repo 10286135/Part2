@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Monthly Claim System</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+
+        /* Claim Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+        button {
+            display: block;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 1rem auto;
+        }
+
+        /* File Upload Styles */
+        .file-upload {
+            margin-top: 1rem;
+        }
+        .file-upload input {
+            display: none;
+        }
+        .file-upload label {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        .file-upload .file-name {
+            margin-left: 1rem;
+        }
+
+        /* Claim Status Styles */
+        .claim-status {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contract Monthly Claim System</h1>
+        <h2>Lecturer Dashboard</h2>
+
+        <form id="claimForm">
+            <div class="form-group">
+                <label for="hoursWorked">Hours Worked:</label>
+                <input type="number" id="hoursWorked" name="hoursWorked" required>
+            </div>
+            <div class="form-group">
+                <label for="hourlyRate">Hourly Rate:</label>
+                <input type="number" id="hourlyRate" name="hourlyRate" required>
+            </div>
+            <div class="form-group">
+                <label for="additionalNotes">Additional Notes:</label>
+                <textarea id="additionalNotes" name="additionalNotes"></textarea>
+            </div>
+            <div class="file-upload">
+                <input type="file" id="claimDocument" name="claimDocument">
+                <label for="claimDocument">Upload Document</label>
+                <span class="file-name" id="fileName"></span>
+            </div>
+            <button type="submit" onclick="submitClaim(event)">Submit Claim</button>
+        </form>
+
+        <div class="claim-status">
+            <p id="claimStatus"></p>
+        </div>
+
+        <div class="nav-links">
+            <a href="GUI UI3.html">Coordinator Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        const claims = []; // Array to hold claims
+
+        function submitClaim(event) {
+            event.preventDefault();
+
+            try {
+                // Retrieve form data
+                const hoursWorked = document.getElementById('hoursWorked').value;
+                const hourlyRate = document.getElementById('hourlyRate').value;
+                const additionalNotes = document.getElementById('additionalNotes').value;
+                const claimDocument = document.getElementById('claimDocument').files[0];
+
+                // Validate input
+                if (isNaN(hoursWorked) || isNaN(hourlyRate) || hoursWorked < 0 || hourlyRate < 0) {
+                    throw new Error('Invalid input values. Please check the form and try again.');
+                }
+                validateFileUpload(claimDocument);
+
+                // Create a claim object
+                const claim = {
+                    id: claims.length + 1,
+                    lecturer: 'John Doe', // Replace with actual lecturer's name if needed
+                    hoursWorked: hoursWorked,
+                    hourlyRate: hourlyRate,
+                    additionalNotes: additionalNotes,
+                    document: claimDocument ? claimDocument.name : ''
+                };
+
+                // Add claim to the claims array
+                claims.push(claim);
+                document.getElementById('claimStatus').innerText = "Claim submitted successfully!";
+                console.log('Claim submitted:', claim);
+            } catch (error) {
+                alert(error.message);
+                console.error('Error submitting claim:', error);
+            }
+        }
+
+        function validateFileUpload(claimDocument) {
+            const allowedExtensions = ['pdf', 'docx', 'xlsx'];
+            const maxFileSize = 5 * 1024 * 1024; // 5 MB
+
+            if (claimDocument) {
+                const fileExtension = claimDocument.name.split('.').pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExtension)) {
+                    throw new Error('Only PDF, DOCX, and XLSX files are allowed.');
+                }
+
+                if (claimDocument.size > maxFileSize) {
+                    throw new Error('File size should not exceed 5 MB.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
